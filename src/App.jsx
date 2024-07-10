@@ -1,4 +1,13 @@
+import React from "react";
+import TransactionList from "./components/TransactionList";
+
 const App = () => {
-  return <div className=" h-[100vh] w-screen bg-black text-white">App</div>;
+  return (
+    <div>
+      <h1>Transactions</h1>
+      <TransactionList />
+    </div>
+  );
 };
+
 export default App;
