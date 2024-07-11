@@ -14,6 +14,8 @@ const EditTransactionModal = ({
     currency: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     if (transaction) {
       setForm(transaction);
@@ -28,6 +30,15 @@ const EditTransactionModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const today = new Date().toISOString().split("T")[0];
+
+    if (form.transaction_date > today) {
+      setErrorMessage("The date cannot be in the future.");
+      return;
+    }
+
+    setErrorMessage("");
+
     try {
       const res = await fetch(
         `http://localhost:5000/api/transactions/editTransactions/${transaction.id}`,
@@ -115,6 +126,9 @@ const EditTransactionModal = ({
                 ))}
               </select>
             </div>
+            {errorMessage && (
+              <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+            )}
             <div className="flex justify-end">
               <button
                 type="button"

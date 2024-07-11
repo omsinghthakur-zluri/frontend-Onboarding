@@ -9,7 +9,7 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
     currency: "",
   });
 
-
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +18,15 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const today = new Date().toISOString().split("T")[0];
+
+    if (form.transaction_date > today) {
+      setErrorMessage("The date cannot be in the future.");
+      return;
+    }
+
+    setErrorMessage("");
+
     try {
       const res = await fetch(
         "http://localhost:5000/api/transactions/addTransaction",
@@ -105,6 +114,9 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
                 ))}
               </select>
             </div>
+            {errorMessage && (
+              <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+            )}
             <div className="flex justify-end">
               <button
                 type="button"
