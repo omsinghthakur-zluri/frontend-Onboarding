@@ -4,6 +4,7 @@ import EditTransactionModal from "./EditTransactionModal";
 import DeleteTransaction from "./DeleteTransaction";
 import UploadCSVModal from "./UploadCSVModal";
 import { MdOutlineEdit } from "react-icons/md";
+import { LiaRupeeSignSolid, LiaDollarSignSolid } from "react-icons/lia";
 
 const TransactionList = () => {
   const [transactions, setTransactions] = useState([]);
@@ -12,6 +13,7 @@ const TransactionList = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCSVModalOpen, setIsCSVModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const [selectedTransactions, setSelectedTransactions] = useState([]);
 
   const fetchTransactions = async () => {
     try {
@@ -47,11 +49,26 @@ const TransactionList = () => {
     fetchTransactions();
   }, [page]);
 
+  // useEffect(() => {
+  //   console.log(selectedTransactions);
+  // }, [selectedTransactions]);
+
   const handleNextPage = () => setPage((prev) => prev + 1);
   const handlePrevPage = () => setPage((prev) => (prev > 1 ? prev - 1 : 1));
 
+  const handleCheckboxChange = (transactionId) => {
+    // console.log(selectedTransactions);
+
+    setSelectedTransactions((prevSelected) =>
+      prevSelected.includes(transactionId)
+        ? prevSelected.filter((id) => id !== transactionId)
+        : [...prevSelected, transactionId]
+    );
+    // console.log(selectedTransactions);
+  };
+
   return (
-    <div className="container  mx-auto p-4 text-sm">
+    <div className="container mx-auto p-4 text-sm">
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -71,60 +88,100 @@ const TransactionList = () => {
       <div className="flex justify-center ">
         <div className="">
           <div className="flex-col items-center justify-center min-w-full ">
-            <div className="flex justify-between bg-slate-150  border-solid border border-gray-200 max-w-[763px] p-2">
-              <h1 className=" text-gray-500">Transactions</h1>
+            <div className="flex justify-between bg-slate-150 border-solid border border-gray-200 max-w-[1000px] p-1 px-2">
+              <h1 className=" text-gray-500 flex items-center text-xl font-normal">
+                Transactions
+              </h1>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setIsCSVModalOpen(true)}
-                  className="px-4 bg-green-500 text-white rounded hover:bg-green-600"
+                  className="px-4 text-purple-600 border-2 font-bold rounded "
                 >
-                  Upload CSV
+                  UPLOAD CSV
                 </button>
                 <button
                   onClick={() => setIsAddModalOpen(true)}
-                  className="px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-8 bg-blue-700 text-white rounded hover:bg-blue-900 py-2 "
                 >
-                  Add Transaction
+                  ADD TRANSACTION
                 </button>
               </div>
             </div>
-            <table className=" bg-white border border-gray-300  shadow-2xl ">
-              <thead className="bg-gray-200">
+            <table className=" bg-white border border-gray-100 shadow-2xl ">
+              <thead className="bg-gray-200 ">
                 <tr>
-                  <th className="px-4 py-4 border-b-2  ">Date</th>
-                  <th className="px-4 py-4 border-b-2">Description</th>
-                  <th className="px-4 py-4 border-b-2">Original Amount ($)</th>
-                  <th className="px-4 py-4 border-b-2">Amount in INR</th>
-                  <th className="px-4 py-4 border-b-2">Actions</th>
+                  <th className="px-4 py-4 border-b-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedTransactions(
+                            transactions.map((t) => t.id)
+                          );
+                        } else {
+                          setSelectedTransactions([]);
+                        }
+                      }}
+                      checked={
+                        selectedTransactions.length === transactions.length
+                      }
+                    />
+                  </th>
+                  <th className="px-4 text-left font-medium py-4 border-b-2">
+                    Date
+                  </th>
+                  <th className="px-4 text-left font-medium min-w-[300px] py-4 border-b-2">
+                    Description
+                  </th>
+                  <th className="px-4 text-left font-medium py-4 border-b-2">
+                    Original Amount ($)
+                  </th>
+                  <th className="px-4 text-left font-medium py-4 border-b-2">
+                    Amount in INR
+                  </th>
+                  <th className="px-4 min-w-[200px] text-left py-4 border-b-2"></th>
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((transaction) => (
-                  
                   <tr
                     key={transaction.id}
-                    className=" relative group transition duration-200 ease-in hover:scale-105 hover:bg-slate-200"
+                    className="relative group transition duration-200 ease-in hover:scale-105 hover:bg-slate-200"
                   >
                     <td className="px-4 py-4 border-b">
-                      {transaction.transaction_date.split("-").reverse().join("-") }
+                      <input
+                        type="checkbox"
+                        checked={selectedTransactions.includes(transaction.id)}
+                        onChange={() => handleCheckboxChange(transaction.id)}
+                      />
                     </td>
-                    <td className="px-4 py-4 border-b max-w-[200px] truncate">
+                    <td className="px-4 py-4 border-b">
+                      {transaction.transaction_date
+                        .split("-")
+                        .reverse()
+                        .join("-")}
+                    </td>
+                    <td className="px-4 py-4 border-b max-w-[100px] truncate pr-10">
                       {transaction.description}
                     </td>
                     <td className="px-4 py-4 border-b">
                       <div className="flex items-center">
-                        <span className="mr-1">$</span>
+                        <span className="mr-1">
+                          <LiaDollarSignSolid />
+                        </span>
                         <span>{transaction.amount}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 border-b">
                       <div className="flex items-center">
+                        <span className="ml-1">
+                          <LiaRupeeSignSolid />
+                        </span>
                         <span>{(transaction.amount * 80).toFixed(2)}</span>
-                        <span className="ml-1">INR</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 border-b">
-                      <div className="flex space-x-2 absolute right-0 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100  transition-opacity">
+                      <div className="flex space-x-10 absolute right-[50px] top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => fetchTransactionById(transaction.id)}
                           className="hover:bg-white rounded-full p-4"
@@ -141,8 +198,7 @@ const TransactionList = () => {
                 ))}
               </tbody>
             </table>
-            <div className="flex justify-between bg-slate-150 bg-white  border-solid border border-gray-200 max-w-[763px] p-2">
-              {/* <h1 className=" text-gray-500">Transactions</h1> */}
+            <div className="flex justify-between bg-slate-150 bg-white border-solid border border-gray-200 max-w-[1000px] p-2">
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
@@ -150,7 +206,7 @@ const TransactionList = () => {
               >
                 Previous
               </button>
-              <div className=" shadow-2xl bg-slate-200 px-2 py-1">
+              <div className="shadow-2xl bg-slate-200 px-2 py-1">
                 Page - {page}
               </div>
               <button
