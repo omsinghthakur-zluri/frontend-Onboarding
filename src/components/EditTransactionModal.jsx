@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import currencies from "../constants";
 
 const EditTransactionModal = ({
   isOpen,
@@ -21,6 +22,7 @@ const EditTransactionModal = ({
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(value);
     setForm({ ...form, [name]: value });
   };
 
@@ -96,14 +98,22 @@ const EditTransactionModal = ({
             </div>
             <div className="mb-4">
               <label className="block mb-2">Currency</label>
-              <input
-                type="text"
+              <select
                 name="currency"
                 value={form.currency}
                 onChange={handleChange}
                 className="w-full p-2 border"
                 required
-              />
+              >
+                <option value="" disabled>
+                  Select currency
+                </option>
+                {currencies.map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex justify-end">
               <button

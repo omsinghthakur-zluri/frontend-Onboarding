@@ -67,6 +67,30 @@ const TransactionList = () => {
     // console.log(selectedTransactions);
   };
 
+  const handleDeleteSelected = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/transactions/deleteTransaction`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ transactionIds: selectedTransactions }),
+        }
+      );
+
+      if (res.ok) {
+        fetchTransactions();
+        setSelectedTransactions([]);
+      } else {
+        console.error("Failed to delete transactions");
+      }
+    } catch (err) {
+      console.error("Error deleting transactions:", err);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 text-sm">
       <AddTransactionModal
@@ -134,16 +158,26 @@ const TransactionList = () => {
                     Description
                   </th>
                   <th className="px-4 text-left font-medium py-4 border-b-2">
-                    Original Amount ($)
+                    Original Amount
                   </th>
                   <th className="px-4 text-left font-medium py-4 border-b-2">
                     Amount in INR
                   </th>
-                  <th className="px-4 min-w-[200px] text-left py-4 border-b-2"></th>
+                  <th className="px-4 min-w-[200px] text-left py-4 border-b-2">
+                    {selectedTransactions.length > 0 && (
+                      <button
+                        onClick={handleDeleteSelected}
+                        className="px-4 bg-red-500 text-white rounded hover:bg-red-600 "
+                      >
+                        DELETE SELECTED
+                      </button>
+                    )}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((transaction) => (
+                  // console.log(transaction)
                   <tr
                     key={transaction.id}
                     className="relative group transition duration-200 ease-in hover:scale-105 hover:bg-slate-200"
@@ -166,9 +200,7 @@ const TransactionList = () => {
                     </td>
                     <td className="px-4 py-4 border-b">
                       <div className="flex items-center">
-                        <span className="mr-1">
-                          <LiaDollarSignSolid />
-                        </span>
+                        <span className="mr-1">{transaction.currency}</span>
                         <span>{transaction.amount}</span>
                       </div>
                     </td>
@@ -177,22 +209,24 @@ const TransactionList = () => {
                         <span className="ml-1">
                           <LiaRupeeSignSolid />
                         </span>
-                        <span>{(transaction.amount * 80).toFixed(2)}</span>
+                        <span>{transaction.amountininr}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 border-b">
-                      <div className="flex space-x-10 absolute right-[50px] top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => fetchTransactionById(transaction.id)}
-                          className="hover:bg-white rounded-full p-4"
-                        >
-                          <MdOutlineEdit />
-                        </button>
-                        <DeleteTransaction
-                          transactionId={transaction.id}
-                          refreshTransactions={fetchTransactions}
-                        />
-                      </div>
+                      {selectedTransactions.length < 1 && (
+                        <div className="flex space-x-10 absolute right-[50px] top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => fetchTransactionById(transaction.id)}
+                            className="hover:bg-white rounded-full p-4"
+                          >
+                            <MdOutlineEdit />
+                          </button>
+                          <DeleteTransaction
+                            transactionId={transaction.id}
+                            refreshTransactions={fetchTransactions}
+                          />
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
