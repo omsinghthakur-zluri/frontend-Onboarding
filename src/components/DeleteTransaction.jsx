@@ -5,7 +5,9 @@ const DeleteTransaction = ({ transactionId, refreshTransactions }) => {
   const handleDelete = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/transactions/deleteTransaction/${transactionId}`,
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/deleteTransaction/${transactionId}`,
         {
           method: "DELETE",
         }

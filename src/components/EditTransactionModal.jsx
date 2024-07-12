@@ -41,7 +41,9 @@ const EditTransactionModal = ({
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/transactions/editTransactions/${transaction.id}`,
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/editTransactions/${transaction.id}`,
         {
           method: "PUT",
           headers: {

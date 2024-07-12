@@ -29,7 +29,9 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/transactions/addTransaction",
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/addTransaction`,
         {
           method: "POST",
           headers: {

@@ -18,7 +18,9 @@ const TransactionList = () => {
   const fetchTransactions = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/transactions/getPaginatedTransactions?page=${page}`
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/getPaginatedTransactions?page=${page}`
       );
 
       if (!res.ok) {
@@ -35,7 +37,9 @@ const TransactionList = () => {
   const fetchTransactionById = async (transactionId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/transactions/getSingleTransaction/${transactionId}`
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/getSingleTransaction/${transactionId}`
       );
       const data = await res.json();
       setEditingTransaction(data);
@@ -70,7 +74,9 @@ const TransactionList = () => {
   const handleDeleteSelected = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/transactions/deleteTransaction`,
+        `${
+          import.meta.env.VITE_APP_SERVER_DOMAIN
+        }/api/transactions/deleteTransaction`,
         {
           method: "DELETE",
           headers: {
@@ -176,66 +182,60 @@ const TransactionList = () => {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) =>
-                  (
-                    <tr
-                      key={transaction.id}
-                      className="relative group transition duration-200 ease-in hover:scale-105 hover:bg-slate-200"
-                    >
-                      {console.log(transaction.amount)}
-                      <td className="px-4 py-4 border-b">
-                        <input
-                          type="checkbox"
-                          checked={selectedTransactions.includes(
-                            transaction.id
-                          )}
-                          onChange={() => handleCheckboxChange(transaction.id)}
-                        />
-                      </td>
-                      <td className="px-4 py-4 border-b">
-                        {transaction.transaction_date
-                          .split("-")
-                          .reverse()
-                          .join("-")}
-                      </td>
-                      <td className="px-4 py-4 border-b max-w-[100px] truncate pr-10">
-                        {transaction.description}
-                      </td>
-                      <td className="px-4 py-4 border-b">
-                        <div className="flex items-center">
-                          <span className="mr-1">{transaction.currency}</span>
-                          <span>{transaction.amount}</span>
+                {transactions.map((transaction) => (
+                  <tr
+                    key={transaction.id}
+                    className="relative group transition duration-200 ease-in hover:scale-105 hover:bg-slate-200"
+                  >
+                    {/* {console.log(transaction.amount)} */}
+                    <td className="px-4 py-4 border-b">
+                      <input
+                        type="checkbox"
+                        checked={selectedTransactions.includes(transaction.id)}
+                        onChange={() => handleCheckboxChange(transaction.id)}
+                      />
+                    </td>
+                    <td className="px-4 py-4 border-b">
+                      {transaction.transaction_date
+                        .split("-")
+                        .reverse()
+                        .join("-")}
+                    </td>
+                    <td className="px-4 py-4 border-b max-w-[100px] truncate pr-10">
+                      {transaction.description}
+                    </td>
+                    <td className="px-4 py-4 border-b">
+                      <div className="flex items-center">
+                        <span className="mr-1">{transaction.currency}</span>
+                        <span>{transaction.amount}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 border-b">
+                      <div className="flex items-center">
+                        <span className="ml-1">
+                          <LiaRupeeSignSolid />
+                        </span>
+                        <span>{transaction.amountininr}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 border-b">
+                      {selectedTransactions.length < 1 && (
+                        <div className="flex space-x-10 absolute right-[50px] top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => fetchTransactionById(transaction.id)}
+                            className="hover:bg-white rounded-full p-4"
+                          >
+                            <MdOutlineEdit />
+                          </button>
+                          <DeleteTransaction
+                            transactionId={transaction.id}
+                            refreshTransactions={fetchTransactions}
+                          />
                         </div>
-                      </td>
-                      <td className="px-4 py-4 border-b">
-                        <div className="flex items-center">
-                          <span className="ml-1">
-                            <LiaRupeeSignSolid />
-                          </span>
-                          <span>{transaction.amountininr}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 border-b">
-                        {selectedTransactions.length < 1 && (
-                          <div className="flex space-x-10 absolute right-[50px] top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              onClick={() =>
-                                fetchTransactionById(transaction.id)
-                              }
-                              className="hover:bg-white rounded-full p-4"
-                            >
-                              <MdOutlineEdit />
-                            </button>
-                            <DeleteTransaction
-                              transactionId={transaction.id}
-                              refreshTransactions={fetchTransactions}
-                            />
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                )}
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             <div className="flex justify-between bg-slate-150 bg-white border-solid border border-gray-200 max-w-[1000px] p-2">
