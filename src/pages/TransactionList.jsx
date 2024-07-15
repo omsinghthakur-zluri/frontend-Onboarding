@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import AddTransactionModal from "./AddTransactionModal";
-import EditTransactionModal from "./EditTransactionModal";
-import DeleteTransaction from "./DeleteTransaction";
-import UploadCSVModal from "./UploadCSVModal";
+import AddTransactionModal from "../components/AddTransactionModal";
+import EditTransactionModal from "../components/EditTransactionModal";
+import DeleteTransaction from "../components/DeleteTransaction";
+import UploadCSVModal from "../components/UploadCSVModal";
 import { MdOutlineEdit } from "react-icons/md";
 import { LiaRupeeSignSolid, LiaDollarSignSolid } from "react-icons/lia";
 
@@ -59,6 +59,7 @@ const TransactionList = () => {
 
   const handleNextPage = () => setPage((prev) => prev + 1);
   const handlePrevPage = () => setPage((prev) => (prev > 1 ? prev - 1 : 1));
+  const setPageTo1 = () => setPage(() => 1);
 
   const handleCheckboxChange = (transactionId) => {
     // console.log(selectedTransactions);
@@ -114,6 +115,7 @@ const TransactionList = () => {
         isOpen={isCSVModalOpen}
         onClose={() => setIsCSVModalOpen(false)}
         refreshTransactions={fetchTransactions}
+        setPageTo1={setPageTo1}
       />
       <div className="flex justify-center ">
         <div className="">

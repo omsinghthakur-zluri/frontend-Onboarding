@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-const UploadCSVModal = ({ isOpen, onClose, refreshTransactions }) => {
+const UploadCSVModal = ({
+  isOpen,
+  onClose,
+  refreshTransactions,
+  setPageTo1,
+}) => {
   const [file, setFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle"); // States: idle, uploading, success, failure
 
@@ -30,8 +35,8 @@ const UploadCSVModal = ({ isOpen, onClose, refreshTransactions }) => {
         })
         .then((data) => {
           if (data.message) {
+            setPageTo1(); // Refresh transactions after upload
             setUploadStatus("success"); // Set state to indicate upload success
-            refreshTransactions(); // Refresh transactions after upload // Close modal after 2 seconds
           } else {
             setUploadStatus("failure"); // Set state to indicate upload failure
             console.error("Error uploading CSV:", data.error);

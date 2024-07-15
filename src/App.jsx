@@ -1,5 +1,5 @@
 import React from "react";
-import TransactionList from "./components/TransactionList";
+import TransactionList from "./pages/TransactionList";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import toast, { Toaster } from "react-hot-toast";
