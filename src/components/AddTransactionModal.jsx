@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import currencies from "../constants";
+import currencies from "../constant/constants";
 
 const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
   const [form, setForm] = useState({
@@ -13,7 +13,9 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // console.log(value);
     setForm({ ...form, [name]: value });
+    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -24,7 +26,10 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
       setErrorMessage("The date cannot be in the future.");
       return;
     }
-
+    if (form.amount < 0) {
+      setErrorMessage("amount not be negative");
+      return;
+    }
     setErrorMessage("");
 
     try {

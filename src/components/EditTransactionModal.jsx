@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import currencies from "../constants";
+import currencies from "../constant/constants";
 
 const EditTransactionModal = ({
   isOpen,
