@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import currencies from "../constant/constants";
+import toast from "react-hot-toast";
 
 const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
   const [form, setForm] = useState({
@@ -48,6 +49,7 @@ const AddTransactionModal = ({ isOpen, onClose, refreshTransactions }) => {
 
       if (res.ok) {
         refreshTransactions();
+        toast.success("Transaction added successfully!");
         onClose();
       } else {
         console.error("Failed to add transaction");

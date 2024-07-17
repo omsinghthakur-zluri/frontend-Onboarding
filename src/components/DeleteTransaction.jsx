@@ -1,5 +1,6 @@
 import React from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 const DeleteTransaction = ({ transactionId, refreshTransactions }) => {
   const handleDelete = async () => {
@@ -15,6 +16,7 @@ const DeleteTransaction = ({ transactionId, refreshTransactions }) => {
 
       if (res.ok) {
         refreshTransactions();
+        toast.success("Transaction deleted successfully!");
       } else {
         console.error("Failed to delete transaction");
       }

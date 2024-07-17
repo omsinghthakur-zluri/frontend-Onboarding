@@ -59,7 +59,10 @@ const TransactionList = () => {
 
   const handleNextPage = () => setPage((prev) => prev + 1);
   const handlePrevPage = () => setPage((prev) => (prev > 1 ? prev - 1 : 1));
-  const setPageTo1 = () => setPage(() => 1);
+  const setPageTo1 = () => {
+    setPage(() => 1);
+    fetchTransactions();
+  };
 
   const handleCheckboxChange = (transactionId) => {
     // console.log(selectedTransactions);

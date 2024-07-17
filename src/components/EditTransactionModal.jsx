@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import currencies from "../constant/constants";
+import toast from "react-hot-toast";
 
 const EditTransactionModal = ({
   isOpen,
@@ -55,6 +56,7 @@ const EditTransactionModal = ({
 
       if (res.ok) {
         refreshTransactions();
+        toast.success("Transaction edited successfully!");
         onClose();
       } else {
         console.error("Failed to update transaction");
